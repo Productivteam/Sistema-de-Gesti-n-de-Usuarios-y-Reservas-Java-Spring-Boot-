@@ -1,0 +1,23 @@
+erDiagram
+    USUARIOS {
+        INT id PK
+        VARCHAR tipo "ADMINISTRADOR | EMPLEADO | CLIENTE"
+        VARCHAR nombre
+        VARCHAR correo UK
+        INT nivel_acceso "solo ADMINISTRADOR (1-5)"
+        VARCHAR cargo "solo EMPLEADO"
+        DOUBLE salario "solo EMPLEADO (> 0)"
+        INT puntos_fidelidad "solo CLIENTE (>= 0)"
+    }
+    SOLICITUDES {
+        INT id PK
+        VARCHAR descripcion
+        VARCHAR prioridad "ALTA | MEDIA | BAJA"
+        VARCHAR estado "PENDIENTE | ATENDIDA"
+        DATETIME fecha_creacion
+        DATETIME fecha_atencion
+        INT cliente_id FK
+        INT empleado_id FK
+    }
+    USUARIOS ||--o{ SOLICITUDES : "cliente crea"
+    USUARIOS |o--o{ SOLICITUDES : "empleado atiende"
