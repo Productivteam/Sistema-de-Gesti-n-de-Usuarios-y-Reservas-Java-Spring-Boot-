@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/usuarios")
 @RequiredArgsConstructor
@@ -40,5 +42,13 @@ public class UsuarioController {
     @GetMapping("/{id}")
     public UsuarioResponse buscarPorId(@PathVariable Integer id) {
         return usuarioService.buscarPorId(id);
+    }
+
+    /**
+     * Usuarios de un solo tipo. Ejemplo: GET /usuarios/tipo/CLIENTE
+     */
+    @GetMapping("/tipo/{tipo}")
+    public List<UsuarioResponse> listarPorTipo(@PathVariable String tipo) {
+        return usuarioService.listarPorTipo(tipo);
     }
 }

@@ -10,10 +10,14 @@ import com.evaluacion.gestion.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -74,6 +78,28 @@ public class UsuarioService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "No existe un usuario con id " + id));
         return UsuarioResponse.desde(usuario);
+    }
+
+    /**
+     * Lista los usuarios de un solo tipo: ADMINISTRADOR, EMPLEADO o CLIENTE.
+     * Recorre todos los usuarios y se queda con los del tipo pedido (búsqueda lineal con for + if).
+     */
+    @Transactional(readOnly = true)
+    public List<UsuarioResponse> listarPorTipo(String tipo) {
+        String tipoBuscado = tipo.trim().toUpperCase();
+
+        if (!List.of("ADMINISTRADOR", "EMPLEADO", "CLIENTE").contains(tipoBuscado)) {
+            throw error("Tipo de usuario no válido: " + tipo + ". Use ADMINISTRADOR, EMPLEADO o CLIENTE");
+        }
+
+        List<UsuarioResponse> resultado = new ArrayList<>();
+        for (Usuario usuario : usuarioRepository.findAll(Sort.by("id"))) {
+            UsuarioResponse response = UsuarioResponse.desde(usuario);
+            if (response.getTipo().equals(tipoBuscado)) {
+                resultado.add(response);
+            }
+        }
+        return resultado;
     }
 
     private ResponseStatusException error(String mensaje) {
