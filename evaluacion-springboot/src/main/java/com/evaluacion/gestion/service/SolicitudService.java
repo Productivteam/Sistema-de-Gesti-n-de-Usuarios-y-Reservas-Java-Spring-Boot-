@@ -153,6 +153,17 @@ public class SolicitudService {
     }
 
     /**
+     * Mira la primera solicitud de la cola SIN sacarla (peek). Devuelve null si la cola está vacía.
+     */
+    public SolicitudResponse verSiguienteEnCola() {
+        Solicitud siguiente = gestorSolicitudes.verSiguiente();
+        if (siguiente == null) {
+            return null;
+        }
+        return SolicitudResponse.desde(siguiente);
+    }
+
+    /**
      * Cima de la pila. Devuelve null si todavía no se ha atendido ninguna.
      */
     public SolicitudResponse ultimaAtendida() {

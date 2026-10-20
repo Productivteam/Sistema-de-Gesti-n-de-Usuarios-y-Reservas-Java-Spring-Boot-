@@ -70,6 +70,17 @@ public class SolicitudController {
         return solicitudService.verCola();
     }
 
+
+    /** La próxima solicitud que se va a atender, sin sacarla de la cola (peek). */
+    @GetMapping("/cola/siguiente")
+    public ResponseEntity<SolicitudResponse> verSiguienteEnCola() {
+        SolicitudResponse siguiente = solicitudService.verSiguienteEnCola();
+        if (siguiente == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(siguiente);
+    }
+
     /** Atiende la siguiente solicitud de la cola. Ejemplo: POST /solicitudes/procesar?empleadoId=2 */
     @PostMapping("/procesar")
     public SolicitudResponse procesarSiguiente(@RequestParam Integer empleadoId) {
