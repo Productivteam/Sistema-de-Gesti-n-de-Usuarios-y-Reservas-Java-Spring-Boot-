@@ -17,4 +17,10 @@ public interface SolicitudRepository extends JpaRepository<Solicitud, Integer> {
 
     // Solicitudes filtradas por estado, con paginación
     Page<Solicitud> findByEstado(EstadoSolicitud estado, Pageable pageable);
+    // Solicitudes que atendió un empleado (empleadoAsignado.id)
+    List<Solicitud> findByEmpleadoAsignadoId(Integer empleadoId);
+
+    // Cuántas solicitudes hay en un estado (PENDIENTE o ATENDIDA)
+    long countByEstado(EstadoSolicitud estado);
+
 }
