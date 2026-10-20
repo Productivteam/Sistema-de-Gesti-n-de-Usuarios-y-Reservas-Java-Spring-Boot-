@@ -50,6 +50,18 @@ public class SolicitudController {
         return solicitudService.listarPorCliente(clienteId);
     }
 
+    /** Solicitudes atendidas por un empleado. Ejemplo: GET /solicitudes/empleado/2 */
+    @GetMapping("/empleado/{empleadoId}")
+    public List<SolicitudResponse> listarPorEmpleado(@PathVariable Integer empleadoId) {
+        return solicitudService.listarPorEmpleado(empleadoId);
+    }
+
+    /** Cuántas solicitudes hay en cada estado, contadas en la base de datos. */
+    @GetMapping("/conteo")
+    public Map<String, Long> contarPorEstado() {
+        return solicitudService.contarPorEstado();
+    }
+
     // ============ Estructuras de datos: cola, pila y lista ============
 
     /** Solicitudes pendientes en orden de llegada (cola FIFO). */

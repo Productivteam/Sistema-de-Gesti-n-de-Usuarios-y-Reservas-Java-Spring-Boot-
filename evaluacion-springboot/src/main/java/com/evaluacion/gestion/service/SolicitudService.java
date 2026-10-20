@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -78,6 +79,26 @@ public class SolicitudService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No existe un cliente con id " + clienteId);
         }
         return SolicitudResponse.desde(solicitudRepository.findByClienteId(clienteId));
+    }
+
+    @Transactional(readOnly = true)
+    public List<SolicitudResponse> listarPorEmpleado(Integer empleadoId) {
+        if (!empleadoRepository.existsById(empleadoId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No existe un empleado con id " + empleadoId);
+        }
+        return SolicitudResponse.desde(solicitudRepository.findByEmpleadoAsignadoId(empleadoId));
+    }
+
+    /**
+     * Cuenta en la base de datos cuántas solicitudes hay en cada estado.
+     */
+    @Transactional(readOnly = true)
+    public Map<String, Long> contarPorEstado() {
+        Map<String, Long> conteo = new LinkedHashMap<>();
+        for (EstadoSolicitud estado : EstadoSolicitud.values()) {
+            conteo.put(estado.name(), solicitudRepository.countByEstado(estado));
+        }
+        return conteo;
     }
 
     // ============ Procesamiento con cola y pila (GestorSolicitudes) ============
